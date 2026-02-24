@@ -10,7 +10,9 @@ import {
     Search,
     Settings,
     Sparkles,
+    LogOut,
 } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
 const NAV_ITEMS = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -23,6 +25,7 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
     const pathname = usePathname();
+    const { signOut } = useAuth();
 
     return (
         <aside className="fixed left-0 top-0 h-screen w-64 flex flex-col border-r border-[var(--color-border)] bg-[var(--color-glass)]  backdrop-blur-xl z-50">
@@ -58,7 +61,14 @@ export default function Sidebar() {
             </nav>
 
             {/* Footer */}
-            <div className="p-4 border-t border-[var(--color-border)]">
+            <div className="p-4 border-t border-[var(--color-border)] flex flex-col gap-3">
+                <button
+                    onClick={signOut}
+                    className="flex items-center gap-2 px-3 py-2 w-full text-sm font-medium text-[var(--color-text-muted)] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                </button>
                 <div className="flex items-center gap-2 px-3">
                     <div className="w-2 h-2 rounded-full bg-[var(--color-success)] animate-pulse" />
                     <span className="text-xs text-[var(--color-text-muted)]">Connected to Firestore</span>

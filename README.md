@@ -13,14 +13,16 @@ A persistent, cloud-synced memory server for AI assistants using the **Model Con
 ```bash
 git clone https://github.com/prust/mcp-memory-server.git
 cd mcp-memory-server
-npm install && npm run build
-node setup.mjs --user-id=YOUR_NAME
+npm install
+npm run setup
 ```
 
-The setup script will:
-- ✅ Verify your `serviceAccountKey.json`
-- ✅ Build the project if needed
-- ✅ Print **ready-to-paste configs** for every client
+The interactive setup wizard will guide you through:
+- 👤 Setting up your unique User ID
+- 🔑 Validating your `serviceAccountKey.json`
+- ⚙️ Configuring the Web Dashboard environment variables
+- 🏗️ Building the project
+- 📋 Generating **ready-to-paste configs** for your preferred MCP client
 
 ---
 

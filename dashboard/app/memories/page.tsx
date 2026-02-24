@@ -1,6 +1,5 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
 import { useMemories, deleteMemory, togglePin, updateMemory } from "@/lib/firestore";
 import { Pin, Trash2, Search, Brain, Edit3, Check, X } from "lucide-react";
 import { useState } from "react";
@@ -141,91 +140,88 @@ export default function MemoriesPage() {
     };
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <main className="ml-64 flex-1 p-8 min-h-screen">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Brain className="w-6 h-6 text-[var(--color-primary)]" />
-                        Memory Explorer
-                    </h1>
-                    <p className="text-sm text-[var(--color-text-muted)] mt-1">
-                        Browse, search, and manage all memories
-                    </p>
+        <>
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold flex items-center gap-2">
+                    <Brain className="w-6 h-6 text-[var(--color-primary)]" />
+                    Memory Explorer
+                </h1>
+                <p className="text-sm text-[var(--color-text-muted)] mt-1">
+                    Browse, search, and manage all memories
+                </p>
+            </div>
+
+            {/* Filters */}
+            <div className="flex flex-wrap items-center gap-3 mb-6">
+                <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
+                    <input
+                        type="text"
+                        placeholder="Search memories..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+                    />
                 </div>
 
-                {/* Filters */}
-                <div className="flex flex-wrap items-center gap-3 mb-6">
-                    <div className="relative flex-1 max-w-md">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-muted)]" />
-                        <input
-                            type="text"
-                            placeholder="Search memories..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
-                        />
+                <button
+                    onClick={() => setFilterPinned(!filterPinned)}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${filterPinned
+                        ? "bg-[var(--color-accent)]/15 text-[var(--color-accent)] border border-[var(--color-accent)]/25"
+                        : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border)]"
+                        }`}
+                >
+                    <Pin className="w-3.5 h-3.5" />
+                    Pinned
+                </button>
+
+                <select
+                    value={filterTag ?? ""}
+                    onChange={(e) => setFilterTag(e.target.value || null)}
+                    className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3 py-2 text-xs text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)]"
+                >
+                    <option value="">All Tags</option>
+                    {allTags.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                    ))}
+                </select>
+
+                <span className="text-xs text-[var(--color-text-muted)]">
+                    {filtered.length} of {memories.length}
+                </span>
+            </div>
+
+            {/* Table */}
+            <div className="glass overflow-hidden">
+                {loading ? (
+                    <div className="flex items-center justify-center h-48">
+                        <div className="w-6 h-6 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
                     </div>
-
-                    <button
-                        onClick={() => setFilterPinned(!filterPinned)}
-                        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${filterPinned
-                                ? "bg-[var(--color-accent)]/15 text-[var(--color-accent)] border border-[var(--color-accent)]/25"
-                                : "bg-[var(--color-surface)] text-[var(--color-text-muted)] border border-[var(--color-border)]"
-                            }`}
-                    >
-                        <Pin className="w-3.5 h-3.5" />
-                        Pinned
-                    </button>
-
-                    <select
-                        value={filterTag ?? ""}
-                        onChange={(e) => setFilterTag(e.target.value || null)}
-                        className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-3 py-2 text-xs text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-primary)]"
-                    >
-                        <option value="">All Tags</option>
-                        {allTags.map((t) => (
-                            <option key={t} value={t}>{t}</option>
-                        ))}
-                    </select>
-
-                    <span className="text-xs text-[var(--color-text-muted)]">
-                        {filtered.length} of {memories.length}
-                    </span>
-                </div>
-
-                {/* Table */}
-                <div className="glass overflow-hidden">
-                    {loading ? (
-                        <div className="flex items-center justify-center h-48">
-                            <div className="w-6 h-6 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
-                        </div>
-                    ) : filtered.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center h-48 text-[var(--color-text-muted)]">
-                            <Brain className="w-8 h-8 mb-2 opacity-50" />
-                            <p className="text-sm">No memories found</p>
-                        </div>
-                    ) : (
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-[var(--color-border)] text-xs text-[var(--color-text-muted)] uppercase tracking-wider">
-                                    <th className="p-3 w-10"></th>
-                                    <th className="p-3 text-left">Fact</th>
-                                    <th className="p-3 text-left">Tags</th>
-                                    <th className="p-3 text-left">Status</th>
-                                    <th className="p-3 text-left">Created</th>
-                                    <th className="p-3 w-20"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filtered.map((m) => (
-                                    <MemoryRow key={m.id} memory={m} onDelete={handleDelete} />
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            </main>
-        </div>
+                ) : filtered.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-48 text-[var(--color-text-muted)]">
+                        <Brain className="w-8 h-8 mb-2 opacity-50" />
+                        <p className="text-sm">No memories found</p>
+                    </div>
+                ) : (
+                    <table className="w-full">
+                        <thead>
+                            <tr className="border-b border-[var(--color-border)] text-xs text-[var(--color-text-muted)] uppercase tracking-wider">
+                                <th className="p-3 w-10"></th>
+                                <th className="p-3 text-left">Fact</th>
+                                <th className="p-3 text-left">Tags</th>
+                                <th className="p-3 text-left">Status</th>
+                                <th className="p-3 text-left">Created</th>
+                                <th className="p-3 w-20"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filtered.map((m) => (
+                                <MemoryRow key={m.id} memory={m} onDelete={handleDelete} />
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        </>
     );
 }

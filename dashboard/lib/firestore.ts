@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "./firebase";
 import type { Memory, MemoryStats } from "./types";
+import { useAuth } from "@/components/AuthProvider";
 
 // The hardcoded USER_ID is removed in favor of dynamic IDs from Firebase Auth
 
@@ -42,7 +43,9 @@ function docToMemory(d: any): Memory {
 }
 
 /** Real-time listener for all memories, sorted pinned-first then newest. */
-export function useMemories(userId?: string) {
+export function useMemories() {
+    const { user } = useAuth();
+    const userId = user?.uid;
     const [memories, setMemories] = useState<Memory[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -71,7 +74,7 @@ export function useMemories(userId?: string) {
         });
 
         return unsubscribe;
-    }, []);
+    }, [userId]);
 
     return { memories, loading };
 }

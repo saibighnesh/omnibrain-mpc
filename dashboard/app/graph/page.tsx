@@ -1,6 +1,5 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
 import { useMemories } from "@/lib/firestore";
 import { Network } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -119,7 +118,7 @@ function ForceGraph({ memories }: { memories: Memory[] }) {
                         if (!event.active) simulation.alphaTarget(0);
                         d.fx = null;
                         d.fy = null;
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     }) as any
             );
 
@@ -225,35 +224,32 @@ export default function GraphPage() {
     const hasGraph = linkedMemories.length > 0 || memories.length > 0;
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <main className="ml-64 flex-1 p-8 min-h-screen">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <Network className="w-6 h-6 text-[var(--color-primary)]" />
-                        Knowledge Graph
-                    </h1>
-                    <p className="text-sm text-[var(--color-text-muted)] mt-1">
-                        Interactive visualization of memory relationships
-                    </p>
-                </div>
+        <>
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold flex items-center gap-2">
+                    <Network className="w-6 h-6 text-[var(--color-primary)]" />
+                    Knowledge Graph
+                </h1>
+                <p className="text-sm text-[var(--color-text-muted)] mt-1">
+                    Interactive visualization of memory relationships
+                </p>
+            </div>
 
-                <div className="glass overflow-hidden" style={{ height: "calc(100vh - 180px)" }}>
-                    {loading ? (
-                        <div className="flex items-center justify-center h-full">
-                            <div className="w-8 h-8 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
-                        </div>
-                    ) : !hasGraph ? (
-                        <div className="flex flex-col items-center justify-center h-full text-[var(--color-text-muted)]">
-                            <Network className="w-12 h-12 mb-3 opacity-30" />
-                            <p className="text-sm">No memories to visualize</p>
-                            <p className="text-xs mt-1">Add memories via MCP to see them here</p>
-                        </div>
-                    ) : (
-                        <ForceGraph memories={memories} />
-                    )}
-                </div>
-            </main>
-        </div>
+            <div className="glass overflow-hidden" style={{ height: "calc(100vh - 180px)" }}>
+                {loading ? (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="w-8 h-8 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
+                    </div>
+                ) : !hasGraph ? (
+                    <div className="flex flex-col items-center justify-center h-full text-[var(--color-text-muted)]">
+                        <Network className="w-12 h-12 mb-3 opacity-30" />
+                        <p className="text-sm">No memories to visualize</p>
+                        <p className="text-xs mt-1">Add memories via MCP to see them here</p>
+                    </div>
+                ) : (
+                    <ForceGraph memories={memories} />
+                )}
+            </div>
+        </>
     );
 }

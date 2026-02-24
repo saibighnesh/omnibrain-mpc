@@ -1,6 +1,6 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
+
 import { useMemories, useStats } from "@/lib/firestore";
 import type { Memory } from "@/lib/types";
 import {
@@ -133,131 +133,94 @@ function MemoryTimeline({ memories }: { memories: Memory[] }) {
   );
 }
 
-import { useAuth } from "@/components/AuthProvider";
-
 export default function DashboardPage() {
-  const { user, loading: authLoading, signInWithGoogle } = useAuth();
-  const { memories, loading: memoriesLoading } = useMemories(user?.uid);
+  const { memories, loading: memoriesLoading } = useMemories();
   const stats = useStats(memories);
 
-  if (authLoading || memoriesLoading) {
+  if (memoriesLoading) {
     return (
-      <div className="flex">
-        <Sidebar />
-        <main className="ml-64 flex-1 p-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="w-8 h-8 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="glass p-8 max-w-sm w-full text-center space-y-6">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--color-primary)]/10 flex items-center justify-center">
-              <Brain className="w-8 h-8 text-[var(--color-primary)]" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">MCP Memory Server</h1>
-            <p className="text-sm text-[var(--color-text-muted)] mt-2">
-              Sign in to view your personal AI memory dashboard
-            </p>
-          </div>
-          <button
-            onClick={signInWithGoogle}
-            className="w-full btn-primary flex items-center justify-center gap-2"
-          >
-            Sign in with Google
-          </button>
-        </div>
+      <div className="flex items-center justify-center h-64">
+        <div className="w-8 h-8 border-2 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <main className="ml-64 flex-1 p-8 min-h-screen">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-[var(--color-primary)]" />
-            Memory Dashboard
-          </h1>
-          <p className="text-sm text-[var(--color-text-muted)] mt-1">
-            Real-time overview of your AI memory system
-          </p>
-        </div>
+    <>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <Sparkles className="w-6 h-6 text-[var(--color-primary)]" />
+          Memory Dashboard
+        </h1>
+        <p className="text-sm text-[var(--color-text-muted)] mt-1">
+          Real-time overview of your AI memory system
+        </p>
+      </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            label="Total Memories"
-            value={stats.total}
-            icon={Brain}
-            color="#3b82f6"
-          />
-          <StatCard
-            label="Pinned"
-            value={stats.pinned}
-            icon={Pin}
-            color="#f59e0b"
-          />
-          <StatCard
-            label="Expiring Soon"
-            value={stats.expiringSoon}
-            icon={Clock}
-            color={stats.expiringSoon > 0 ? "#ef4444" : "#10b981"}
-            subtitle="Within 24 hours"
-          />
-          <StatCard
-            label="Unique Tags"
-            value={Object.keys(stats.tags).length}
-            icon={Tag}
-            color="#8b5cf6"
-          />
-        </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <StatCard
+          label="Total Memories"
+          value={stats.total}
+          icon={Brain}
+          color="#3b82f6"
+        />
+        <StatCard
+          label="Pinned"
+          value={stats.pinned}
+          icon={Pin}
+          color="#f59e0b"
+        />
+        <StatCard
+          label="Expiring Soon"
+          value={stats.expiringSoon}
+          icon={Clock}
+          color={stats.expiringSoon > 0 ? "#ef4444" : "#10b981"}
+          subtitle="Within 24 hours"
+        />
+        <StatCard
+          label="Unique Tags"
+          value={Object.keys(stats.tags).length}
+          icon={Tag}
+          color="#8b5cf6"
+        />
+      </div>
 
-        {/* Two-column layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left column: Timeline + Tags */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* Timeline */}
-            <div className="glass p-5">
-              <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[var(--color-primary)]" />
-                Memory Timeline
-              </h3>
-              <MemoryTimeline memories={memories} />
-            </div>
-
-            {/* Tags */}
-            <div className="glass p-5">
-              <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                <Tag className="w-4 h-4 text-purple-400" />
-                Top Tags
-              </h3>
-              <TagCloud tags={stats.tags} />
-            </div>
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left column: Timeline + Tags */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Timeline */}
+          <div className="glass p-5">
+            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[var(--color-primary)]" />
+              Memory Timeline
+            </h3>
+            <MemoryTimeline memories={memories} />
           </div>
 
-          {/* Right column: Recent Activity */}
-          <div className="lg:col-span-2">
-            <div className="glass p-5">
-              <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
-                <Brain className="w-4 h-4 text-[var(--color-primary)]" />
-                Recent Memories
-              </h3>
-              <RecentActivity memories={memories} />
-            </div>
+          {/* Tags */}
+          <div className="glass p-5">
+            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+              <Tag className="w-4 h-4 text-purple-400" />
+              Top Tags
+            </h3>
+            <TagCloud tags={stats.tags} />
           </div>
         </div>
-      </main>
-    </div>
+
+        {/* Right column: Recent Activity */}
+        <div className="lg:col-span-2">
+          <div className="glass p-5">
+            <h3 className="text-sm font-semibold mb-4 flex items-center gap-2">
+              <Brain className="w-4 h-4 text-[var(--color-primary)]" />
+              Recent Memories
+            </h3>
+            <RecentActivity memories={memories} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

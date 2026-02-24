@@ -1,6 +1,5 @@
 "use client";
 
-import Sidebar from "@/components/Sidebar";
 import { useMemories, useStats } from "@/lib/firestore";
 import { Settings as SettingsIcon, Server, Database, Cpu, Terminal, Copy, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
@@ -87,60 +86,57 @@ Name: firebase-shared-memory
 Command: node C:/absolute/path/to/mcp-memory-server/dist/index.js --user-id=YOUR_USERNAME`;
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <main className="ml-64 flex-1 p-8 min-h-screen">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold flex items-center gap-2">
-                        <SettingsIcon className="w-6 h-6 text-[var(--color-primary)]" />
-                        Settings
-                    </h1>
-                    <p className="text-sm text-[var(--color-text-muted)] mt-1">
-                        Server configuration and system information
-                    </p>
-                </div>
+        <>
+            <div className="mb-6">
+                <h1 className="text-2xl font-bold flex items-center gap-2">
+                    <SettingsIcon className="w-6 h-6 text-[var(--color-primary)]" />
+                    Settings
+                </h1>
+                <p className="text-sm text-[var(--color-text-muted)] mt-1">
+                    Server configuration and system information
+                </p>
+            </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
-                    <div className="space-y-6">
-                        {sections.map(({ title, icon: Icon, items }) => (
-                            <div key={title} className="glass p-5">
-                                <h2 className="font-semibold text-sm flex items-center gap-2 mb-4">
-                                    <Icon className="w-4 h-4 text-[var(--color-primary)]" />
-                                    {title}
-                                </h2>
-                                <div className="space-y-3">
-                                    {items.map(({ label, value }) => (
-                                        <div
-                                            key={label}
-                                            className="flex items-center justify-between py-2 border-b border-[var(--color-border)] last:border-0"
-                                        >
-                                            <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
-                                            <span className="text-sm font-medium">{value}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="space-y-6">
-                        <div className="glass p-5">
-                            <h2 className="font-semibold text-sm flex items-center gap-2 mb-2">
-                                <Terminal className="w-4 h-4 text-[var(--color-primary)]" />
-                                Connection Guide (LLM Clients)
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+                <div className="space-y-6">
+                    {sections.map(({ title, icon: Icon, items }) => (
+                        <div key={title} className="glass p-5">
+                            <h2 className="font-semibold text-sm flex items-center gap-2 mb-4">
+                                <Icon className="w-4 h-4 text-[var(--color-primary)]" />
+                                {title}
                             </h2>
-                            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
-                                Connect your AI assistant to this memory server. Replace <code className="text-[var(--color-primary)]">YOUR_USERNAME</code> with your unique ID, and update the file path to point to your <code className="text-white">dist/index.js</code> file.
-                            </p>
-
-                            <CopyBlock title="Claude Desktop / Windsurf / Gemini CLI config.json" code={claudeConfig} />
-                            
-                            <CopyBlock title="Cursor IDE (Settings -> Features -> MCP)" code={cursorConfig} />
+                            <div className="space-y-3">
+                                {items.map(({ label, value }) => (
+                                    <div
+                                        key={label}
+                                        className="flex items-center justify-between py-2 border-b border-[var(--color-border)] last:border-0"
+                                    >
+                                        <span className="text-sm text-[var(--color-text-muted)]">{label}</span>
+                                        <span className="text-sm font-medium">{value}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
+                    ))}
+                </div>
+
+                <div className="space-y-6">
+                    <div className="glass p-5">
+                        <h2 className="font-semibold text-sm flex items-center gap-2 mb-2">
+                            <Terminal className="w-4 h-4 text-[var(--color-primary)]" />
+                            Connection Guide (LLM Clients)
+                        </h2>
+                        <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+                            Connect your AI assistant to this memory server. Replace <code className="text-[var(--color-primary)]">YOUR_USERNAME</code> with your unique ID, and update the file path to point to your <code className="text-white">dist/index.js</code> file.
+                        </p>
+
+                        <CopyBlock title="Claude Desktop / Windsurf / Gemini CLI config.json" code={claudeConfig} />
+
+                        <CopyBlock title="Cursor IDE (Settings -> Features -> MCP)" code={cursorConfig} />
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </>
     );
 }
 
