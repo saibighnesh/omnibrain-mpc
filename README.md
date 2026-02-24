@@ -185,8 +185,6 @@ OPENAI_MODEL=text-embedding-3-large   # Custom model name
 
 ## 📊 Web Dashboard
 
-**Live at: [mcp-memory-srv-prust.web.app](https://mcp-memory-srv-prust.web.app)**
-
 | Page | Features |
 |---|---|
 | 📊 Dashboard | Stats, timeline, tag cloud, activity feed |
