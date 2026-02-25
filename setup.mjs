@@ -268,10 +268,11 @@ NEXT_PUBLIC_FIREBASE_APP_ID=${appId}
     }
 
     console.log(`\n${BOLD}Paste that into your MCP settings file!${RESET}`);
+    console.log(`  - For Antigravity IDE: Just tell the AI: ${CYAN}"Add this memory server: node ${serverPath} --user-id=${userId || 'YOUR_UID'}"${RESET}`);
     console.log(`  - For Claude Desktop: ${CYAN}claude_desktop_config.json${RESET}`);
     console.log(`  - For Cursor IDE: Settings -> MCP -> Add new -> Command: ${CYAN}node ${serverPath} --user-id=${userId || 'YOUR_UID'}${RESET}`);
 
-    console.log(`\n${BOLD}${GREEN}Setup Complete! Restart your AI client and say "Hello"!${RESET}`);
+    console.log(`\n${BOLD}${GREEN}Setup Complete! Restart your AI client (or tell Antigravity it's ready) and say "Hello"!${RESET}`);
 
     rl.close();
 }
