@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemories, useStats } from "@/lib/firestore";
-import { Settings as SettingsIcon, Server, Database, Cpu, Terminal, Copy, CheckCircle2 } from "lucide-react";
+import { Settings as SettingsIcon, Server, Database, Cpu, Terminal, Copy, CheckCircle2, User as UserIcon, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/components/AuthProvider";
 
 function CopyBlock({ code, title }: { code: string; title: string }) {
     const [copied, setCopied] = useState(false);
@@ -33,6 +34,7 @@ function CopyBlock({ code, title }: { code: string; title: string }) {
 }
 
 export default function SettingsPage() {
+    const { user, signOut } = useAuth();
     const { memories } = useMemories();
     const stats = useStats(memories);
 
@@ -121,6 +123,28 @@ Command: node C:/absolute/path/to/mcp-memory-server/dist/index.js --user-id=YOUR
                 </div>
 
                 <div className="space-y-6">
+                    <div className="glass p-5 border border-red-500/10">
+                        <h2 className="font-semibold text-sm flex items-center gap-2 mb-4">
+                            <UserIcon className="w-4 h-4 text-[var(--color-primary)]" />
+                            Account Profile
+                        </h2>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-white">{user?.email || "Connected via Google"}</p>
+                                    <p className="text-xs text-[var(--color-text-muted)] font-mono mt-1">UID: {user?.uid}</p>
+                                </div>
+                                <button
+                                    onClick={signOut}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-400/10 hover:bg-red-400/20 border border-red-400/20 rounded-xl transition-all shadow-sm"
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="glass p-5">
                         <h2 className="font-semibold text-sm flex items-center gap-2 mb-2">
                             <Terminal className="w-4 h-4 text-[var(--color-primary)]" />
