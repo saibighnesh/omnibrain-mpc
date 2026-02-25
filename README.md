@@ -26,6 +26,7 @@ The interactive setup wizard will guide you through:
 
 ## 💻 Supported Clients
 The setup wizard automatically generates the exact configuration you need for:
+- Antigravity (Google / Gemini)
 - Claude Desktop
 - Cursor IDE
 - Windsurf / Codeium
