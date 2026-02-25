@@ -188,13 +188,43 @@ NEXT_PUBLIC_FIREBASE_APP_ID=${appId}
 
 
     // Step 4: Login and get UID
-    console.log(`\n${BOLD}${CYAN}Step 4: Connect Your AI Identity${RESET}`);
+    console.log(`\n${BOLD}${CYAN}Step 4: Deploy your Visual Dashboard to the Cloud${RESET}`);
+    console.log(`To ensure your dashboard is accessible anywhere, we will build and deploy it straight to Firebase Hosting!`);
+
+    let dashboardUrl = "http://localhost:3000";
+    try {
+        const { readFileSync } = await import("fs");
+        if (existsSync("dashboard/.env.local")) {
+            const envContents = readFileSync("dashboard/.env.local", "utf8");
+            const match = envContents.match(/NEXT_PUBLIC_FIREBASE_PROJECT_ID=(.*)/);
+            if (match && match[1]) {
+                dashboardUrl = `https://${match[1].trim()}.web.app`;
+            }
+        }
+
+        console.log(`  ${DIM}Running: npm run build (this may take a minute...)${RESET}`);
+        const { execSync } = await import("child_process");
+        execSync("npm run build --prefix dashboard", { stdio: "inherit" });
+
+        console.log(`  ${DIM}Deploying to Firebase Hosting...${RESET}`);
+        const deployOutput = execSync("npx firebase deploy --only hosting", { encoding: "utf-8" });
+
+        // Try to extract the hosting URL
+        const urlMatch = deployOutput.match(/Hosting URL:\s*(https:\/\/[^\s]+)/);
+        if (urlMatch) {
+            dashboardUrl = urlMatch[1];
+        }
+        console.log(`  ${CHECK} Dashboard successfully deployed! Live at: ${CYAN}${dashboardUrl}${RESET}\n`);
+    } catch (e) {
+        console.log(`  ${CROSS} Deployment failed. You can still run it locally with 'cd dashboard && npm run dev'.\n`);
+    }
+
+    // Step 5: Connect Identity
+    console.log(`\n${BOLD}${CYAN}Step 5: Connect Your AI Identity${RESET}`);
     console.log(`Your server needs to know *who* you are, so your AI only saves memories to your private account.`);
-    console.log(`1. Open a new terminal window in this folder and run: ${BOLD}cd dashboard && npm run dev${RESET}`);
-    console.log(`   ${DIM}(If you get a 'next: command not found' error, run 'npm install' inside the dashboard folder first)${RESET}`);
-    console.log(`2. Open ${CYAN}http://localhost:3000${RESET} in your browser and log in with Google.`);
-    console.log(`3. In the Firebase Console, go to ${BOLD}Authentication${RESET} -> ${BOLD}Users${RESET}.`);
-    console.log(`4. Find your email and copy the ${BOLD}User UID${RESET} (it looks like a long random string of letters/numbers).`);
+    console.log(`1. Open ${CYAN}${dashboardUrl}${RESET} in your browser and log in with Google.`);
+    console.log(`2. In the Firebase Console, go to ${BOLD}Authentication${RESET} -> ${BOLD}Users${RESET}.`);
+    console.log(`3. Find your email and copy the ${BOLD}User UID${RESET} (it looks like a long random string of letters/numbers).`);
 
     const userId = await prompt("Paste your Firebase User UID here:");
 
